@@ -1,9 +1,15 @@
 #include <iostream>
 #include <vector>
+#include <map>
 #include <cstdlib>
 // #include <bits/stdc++.h>
 
 using namespace std;
+
+int numberClauses = 0, numberVariables = 0, numberValuations = 0;
+vector<map<int,int>> valuations;
+vector<map<int,int>> clauses;
+int actualIteration = 0;
 
 /*
 maximo de variaveis = 2**20
@@ -13,8 +19,43 @@ possibilidades = 2**n (n = numero de variaveis)
 minimo de 1 variavel
 */
 
+void verifyClauses() {
+    int numberNotSatisfiedClauses = 0;
+    vector<int> indexesOfClausesNotSatisfied;
+    for (int i = 0; i < numberClauses; i++) {
+        bool satisfied = false;
+        for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
+            if (valuations[actualIteration][it->first] == clauses[i][it->first]) {
+                satisfied = true;
+                break;
+            }
+        }
+        if (!satisfied) {
+            numberNotSatisfiedClauses++;
+            indexesOfClausesNotSatisfied.push_back(i);
+        }
+    }
+    if (numberNotSatisfiedClauses == 0) {
+        cout << "SAT" << endl;
+    } else {
+        cout << numberNotSatisfiedClauses << " [clausulas falsas]";
+        for (int index : indexesOfClausesNotSatisfied) {
+            cout << " " << index;
+        }
+        cout << endl;
+        // TODO: PRINT LITS -> Map que a key eh o valor a ser printado, e o valor vai incrementando ao ser encontrado para fazer o sort
+    }
+    actualIteration++;
+}
+
+void verifyCases() {
+    for (int i = 0; i < numberValuations; i++) {
+        verifyClauses();
+    }
+}
+
 int main() {
-    cout << "Hello World!" << endl << "SAT - Satisfabilidade Booleana" << endl;
+    // cout << "Hello World!" << endl << "SAT - Satisfabilidade Booleana" << endl;
 
     // Quantas variaveis eu tenho?
     // Quantas clausulas eu tenho? (o 0 representa o fim de uma clausula)
@@ -30,69 +71,60 @@ int main() {
     // quantas clausulas nao foram satisfeitas
     // uma clausula eh satisfeita quando pelo menos um literal tiver valoracao verdadeira
 
-    int numberClauses = 0, numberVariables = 0, numberNotSatisfiedClauses = 0;
-    vector<vector<int>> clauses;
-    vector<int> valuation;
+    
     // v[0] = 1 2 -3
-
-    cout << "Number of variables:" << endl;
+    
+    // cout << "Number of variables:" << endl;
     cin >> numberVariables;
-    cout << "Number of clauses:" << endl;
+    // cout << "Number of clauses:" << endl;
     cin >> numberClauses;
 
-    cout << "Clauses:" << endl;
+    // cout << "Clauses:" << endl;
 
     for (int i = 0; i < numberClauses; i++) {
-        vector<int> auxVector;
+        map<int, int> auxMap;
         while (true) {
             int temp;
             cin >> temp;
             if (temp == 0) {
                 break;
             }
-            auxVector.push_back(temp);
+            auxMap[abs(temp)] = temp;
         }
-        clauses.push_back(auxVector);
+        clauses.push_back(auxMap);
     }
 
-    for (vector<int> clause : clauses) {
-        cout << "clause:" << endl;
-        for (int variable : clause) {
-            cout << variable << " ";
+    cout << "clauses:" << endl;
+    for (int i = 0; i < numberClauses; i++) {
+        for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
+            cout << it->first << ':' << it->second << " ";
         }
         cout << endl;
     }
 
-    cout << "Valuation:" << endl;
-    for (int i = 0; i < numberVariables; i++) {
-        int temp;
-        cin >> temp;
-        valuation.push_back(temp);
+    // cout << "Valuation:" << endl;
+    string reader;
+    while (!cin.eof() && cin >> reader) {
+        if (reader.compare("full") == 0) {
+            map<int, int> temporaryMap;
+            for (int i = 0; i < numberVariables; i++) {
+                int temp;
+                cin >> temp;
+                temporaryMap[abs(temp)] = temp; // captura o valor absoluto para o map e mapeando para o valor real
+            }
+            valuations.push_back(temporaryMap);
+        } else if (reader.compare("flip") == 0) {
+            int temp;
+            cin >> temp;
+            map<int, int> temporaryMap;
+            temporaryMap.insert(valuations[numberValuations - 1].begin(), valuations[numberValuations - 1].end()); // copiou o anterior
+            temporaryMap[temp] = -temporaryMap[temp];
+            valuations.push_back(temporaryMap);
+        }
+        numberValuations++;
     }
 
-    // percorrer o vetor de clausulas, pegando cada variavel de uma clausula e verificando com o valuation
-    int counter = 0;
-    for (vector<int> clause : clauses) {
-        int clauseSize = clause.size();
-        for (int variable : clause) {
-            // variavel 1 = valuation[0]
-            int variableValuation = abs(variable); // -1 >> 1
-            if (variable == valuation[variableValuation - 1]) { // valuation[1 - 1]
-                break;
-            } 
-            // se variable == -1 (negado) e valuation[1 - 1] == 1 (positivo) ... valuation[2 - 1] == -2 (negado)
-            clauseSize--;
-        }
-        if (clauseSize == 0) {
-            numberNotSatisfiedClauses++;
-            cout << "Clausula " << counter + 1 << " Não Satisfeita" << endl;
-        } else {
-            cout << "Clausula " << counter + 1 << " Satisfeita" << endl;
-        }
-        counter++;
-    }
-
-    cout << "Number of Not Satisfied Clauses: " << numberNotSatisfiedClauses << endl;
+    verifyCases();
 
     return 0;
 }
