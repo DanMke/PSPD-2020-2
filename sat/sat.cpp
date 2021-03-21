@@ -102,3 +102,35 @@ int main() {
 // v[0] = 1 2 3
 // v[1] = 1 -2 -3
 // v[2] = -1 -2 -3
+
+
+
+
+
+
+
+// ---------------------------------------------
+// input
+/*
+2 3 -> 2 variaveis (variaveis iniciam em 1) e 3 perguntas (indices das perguntas comecam em 0)
+
+1 2 0 -> perguntas encerrando com 0
+1 -2 0
+-1 -2 0
+
+full -1 -2 -> valoração: valores para as variaveis (valor verdadeiro)
+flip 2 -> trocar valor da variavel 2 (*(-1)) na valoração
+flip 1
+flip 2
+*/
+
+// ---------------------------------------------
+// output -> um para cada full/flip
+/*
+[6 clausulas falsas] 7 44 47 64 73 88 -> indices das perguntas iniciando com 0
+[lits] -19 10 17 9 -16 15 -14 13 -6 5 -4 1 -> literais ordenados pelo numero de vezes em que aparece nas clausulas falsas
+
+ou 
+
+SAT
+*/
