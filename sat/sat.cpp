@@ -19,31 +19,68 @@ possibilidades = 2**n (n = numero de variaveis)
 minimo de 1 variavel
 */
 
+// Comparator function to sort pairs 
+// according to second value 
+bool cmp(pair<int, int>& a, pair<int, int>& b) { 
+    return a.second != b.second?  a.second > b.second : abs(a.first) > abs(b.first);
+} 
+  
+// Function to sort the map according 
+// to value in a (key-value) pairs 
+void sortAndPrintLits(map<int, int>& lits) { 
+  
+    // Declare vector of pairs 
+    vector<pair<int, int> > sortedPair; 
+  
+    // Copy key-value pair from Map 
+    // to vector of pairs 
+    for (auto& it : lits) { 
+        sortedPair.push_back(it); 
+    } 
+  
+    // Sort using comparator function 
+    sort(sortedPair.begin(), sortedPair.end(), cmp); 
+
+    // Print the sorted value 
+    cout << "[lits]";
+    for (auto& it : sortedPair) { 
+        cout << " " << it.first;
+    }
+    cout << endl;
+} 
+
 void verifyClauses() {
     int numberNotSatisfiedClauses = 0;
+    map<int,int> lits;
     vector<int> indexesOfClausesNotSatisfied;
     for (int i = 0; i < numberClauses; i++) {
         bool satisfied = false;
+        vector<int> litsTemp;
         for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
             if (valuations[actualIteration][it->first] == clauses[i][it->first]) {
                 satisfied = true;
                 break;
+            } else {
+                litsTemp.push_back(clauses[i][it->first]);
             }
         }
         if (!satisfied) {
             numberNotSatisfiedClauses++;
             indexesOfClausesNotSatisfied.push_back(i);
+            for (int l : litsTemp) {
+                lits[l]++;
+            }
         }
     }
     if (numberNotSatisfiedClauses == 0) {
         cout << "SAT" << endl;
     } else {
-        cout << numberNotSatisfiedClauses << " [clausulas falsas]";
+        cout << "[" << numberNotSatisfiedClauses <<" clausulas falsas]";
         for (int index : indexesOfClausesNotSatisfied) {
             cout << " " << index;
         }
         cout << endl;
-        // TODO: PRINT LITS -> Map que a key eh o valor a ser printado, e o valor vai incrementando ao ser encontrado para fazer o sort
+        sortAndPrintLits(lits);
     }
     actualIteration++;
 }
@@ -94,13 +131,13 @@ int main() {
         clauses.push_back(auxMap);
     }
 
-    cout << "clauses:" << endl;
-    for (int i = 0; i < numberClauses; i++) {
-        for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
-            cout << it->first << ':' << it->second << " ";
-        }
-        cout << endl;
-    }
+    // cout << "clauses:" << endl;
+    // for (int i = 0; i < numberClauses; i++) {
+    //     for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
+    //         cout << it->first << ':' << it->second << " ";
+    //     }
+    //     cout << endl;
+    // }
 
     // cout << "Valuation:" << endl;
     string reader;
@@ -123,6 +160,7 @@ int main() {
         }
         numberValuations++;
     }
+    // cout << "valuations: " << numberValuations << endl;
 
     verifyCases();
 
