@@ -1,0 +1,171 @@
+== input/uf20-0819
+time -p ./bin < input/uf20-0819 > benchmark/uf20-0819
+real 0.00
+user 0.00
+sys 0.00
+== input/uf125-01
+time -p ./bin < input/uf125-01 > benchmark/uf125-01
+real 38.01
+user 35.64
+sys 2.35
+== input/uf20-0216
+time -p ./bin < input/uf20-0216 > benchmark/uf20-0216
+real 0.00
+user 0.00
+sys 0.00
+== input/uf20-0115
+time -p ./bin < input/uf20-0115 > benchmark/uf20-0115
+real 0.00
+user 0.00
+sys 0.00
+== input/uf20-018
+time -p ./bin < input/uf20-018 > benchmark/uf20-018
+real 0.01
+user 0.00
+sys 0.01
+== input/simples
+time -p ./bin < input/simples > benchmark/simples
+real 0.00
+user 0.00
+sys 0.00
+== input/flat125-55
+time -p ./bin < input/flat125-55 > benchmark/flat125-55
+real 38.21
+user 36.45
+sys 1.75
+== input/uf20-0462
+time -p ./bin < input/uf20-0462 > benchmark/uf20-0462
+real 0.02
+user 0.01
+sys 0.00
+== input/uf20-01
+time -p ./bin < input/uf20-01 > benchmark/uf20-01
+real 0.00
+user 0.00
+sys 0.00
+== input/flat75-90
+time -p ./bin < input/flat75-90 > benchmark/flat75-90
+real 37.36
+user 35.07
+sys 2.21
+== input/uf100-01
+time -p ./bin < input/uf100-01 > benchmark/uf100-01
+real 38.12
+user 35.46
+sys 2.63
+== input/uf175-01
+time -p ./bin < input/uf175-01 > benchmark/uf175-01
+real 41.04
+user 38.89
+sys 2.00
+== input/bmc-ibm-3
+time -p ./bin < input/bmc-ibm-3 > benchmark/bmc-ibm-3
+real 39.48
+user 38.64
+sys 0.83
+== input/uf150-01
+time -p ./bin < input/uf150-01 > benchmark/uf150-01
+real 38.08
+user 35.86
+sys 2.14
+== input/uf225-01
+time -p ./bin < input/uf225-01 > benchmark/uf225-01
+real 42.12
+user 40.08
+sys 1.98
+== input/prova
+time -p ./bin < input/prova > benchmark/prova
+real 0.10
+user 0.09
+sys 0.00
+== input/uf20-0123
+time -p ./bin < input/uf20-0123 > benchmark/uf20-0123
+real 0.00
+user 0.00
+sys 0.00
+== input/flat75-33
+time -p ./bin < input/flat75-33 > benchmark/flat75-33
+real 37.80
+user 35.52
+sys 2.23
+== input/bmc-ibm-1
+time -p ./bin < input/bmc-ibm-1 > benchmark/bmc-ibm-1
+real 45.48
+user 44.42
+sys 1.05
+== input/flat30-36
+time -p ./bin < input/flat30-36 > benchmark/flat30-36
+real 9.44
+user 8.37
+sys 1.06
+== input/uf20-012
+time -p ./bin < input/uf20-012 > benchmark/uf20-012
+real 0.00
+user 0.00
+sys 0.00
+== input/uf250-01
+time -p ./bin < input/uf250-01 > benchmark/uf250-01
+real 42.03
+user 40.34
+sys 1.59
+== input/uf20-095
+time -p ./bin < input/uf20-095 > benchmark/uf20-095
+real 0.00
+user 0.00
+sys 0.00
+== input/flat125-77
+time -p ./bin < input/flat125-77 > benchmark/flat125-77
+real 37.27
+user 35.43
+sys 1.77
+== input/uf20-077
+time -p ./bin < input/uf20-077 > benchmark/uf20-077
+real 0.00
+user 0.00
+sys 0.00
+== input/flat175-34
+time -p ./bin < input/flat175-34 > benchmark/flat175-34
+real 36.99
+user 35.30
+sys 1.66
+== input/uf200-01
+time -p ./bin < input/uf200-01 > benchmark/uf200-01
+real 41.86
+user 39.96
+sys 1.89
+== input/flat175-44
+time -p ./bin < input/flat175-44 > benchmark/flat175-44
+real 37.81
+user 36.21
+sys 1.57
+== input/pombos-10
+time -p ./bin < input/pombos-10 > benchmark/pombos-10
+real 33.08
+user 29.94
+sys 3.11
+== input/uf50-01
+time -p ./bin < input/uf50-01 > benchmark/uf50-01
+real 15.57
+user 13.74
+sys 1.80
+== input/bmc-ibm-2
+time -p ./bin < input/bmc-ibm-2 > benchmark/bmc-ibm-2
+real 40.48
+user 39.38
+sys 1.06
+== input/flat30-97
+time -p ./bin < input/flat30-97 > benchmark/flat30-97
+real 31.88
+user 28.33
+sys 3.50
+== input/uf20-0846
+time -p ./bin < input/uf20-0846 > benchmark/uf20-0846
+real 0.00
+user 0.00
+sys 0.00
+== input/uf75-01
+time -p ./bin < input/uf75-01 > benchmark/uf75-01
+real 35.96
+user 32.85
+sys 3.00
+
