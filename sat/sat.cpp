@@ -19,7 +19,6 @@ vector<map<int,int>> clauses;
 int actualIteration = 0;
 sem_t semaphoreIteration, semaphorePrint;
 pthread_t tid[NUM_THREADS];
-mutex mtx; 
 
 int arrNumberNotSatisfiedClauses[999999];
 vector<int> arrIndexesOfClausesNotSatisfied[999999];
@@ -59,7 +58,6 @@ vector<pair<int, int> > sortLits(map<int, int>& lits) {
 } 
 
 void printOutput(int numberNotSatisfiedClauses, vector<int> indexesOfClausesNotSatisfied, vector<pair<int, int> > sortedLits) {
-    mtx.lock();
     if (numberNotSatisfiedClauses == 0) {
         cout << "SAT" << endl;
     } else {
@@ -75,7 +73,6 @@ void printOutput(int numberNotSatisfiedClauses, vector<int> indexesOfClausesNotS
         }
         cout << endl;
     }
-    mtx.unlock();
 }
 
 void verifyClauses() {
