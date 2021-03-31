@@ -3,7 +3,13 @@
 #include <map>
 #include <cstdlib>
 #include <algorithm>
+#include <pthread.h>
+#include <semaphore.h>
+#include <mutex>
+#include <unistd.h>
+
 // #include <bits/stdc++.h>
+#define NUM_THREADS 2
 
 using namespace std;
 
@@ -11,6 +17,13 @@ int numberClauses = 0, numberVariables = 0, numberValuations = 0;
 vector<map<int,int>> valuations;
 vector<map<int,int>> clauses;
 int actualIteration = 0;
+sem_t semaphoreIteration, semaphorePrint;
+pthread_t tid[NUM_THREADS];
+mutex mtx; 
+
+int arrNumberNotSatisfiedClauses[999999];
+vector<int> arrIndexesOfClausesNotSatisfied[999999];
+vector<pair<int, int> > arrSortedLits[999999];
 
 /*
 maximo de variaveis = 2**20
@@ -28,7 +41,7 @@ bool cmp(pair<int, int>& a, pair<int, int>& b) {
   
 // Function to sort the map according 
 // to value in a (key-value) pairs 
-void sortAndPrintLits(map<int, int>& lits) { 
+vector<pair<int, int> > sortLits(map<int, int>& lits) { 
   
     // Declare vector of pairs 
     vector<pair<int, int> > sortedPair; 
@@ -42,23 +55,42 @@ void sortAndPrintLits(map<int, int>& lits) {
     // Sort using comparator function 
     sort(sortedPair.begin(), sortedPair.end(), cmp); 
 
-    // Print the sorted value 
-    cout << "[lits]";
-    for (auto& it : sortedPair) { 
-        cout << " " << it.first;
-    }
-    cout << endl;
+    return sortedPair;
 } 
+
+void printOutput(int numberNotSatisfiedClauses, vector<int> indexesOfClausesNotSatisfied, vector<pair<int, int> > sortedLits) {
+    mtx.lock();
+    if (numberNotSatisfiedClauses == 0) {
+        cout << "SAT" << endl;
+    } else {
+        cout << "[" << numberNotSatisfiedClauses <<" clausulas falsas]";
+        for (int index : indexesOfClausesNotSatisfied) {
+            cout << " " << index;
+        }
+        cout << endl;
+        // Print the sorted value
+        cout << "[lits]";
+        for (auto& it : sortedLits) { 
+            cout << " " << it.first;
+        }
+        cout << endl;
+    }
+    mtx.unlock();
+}
 
 void verifyClauses() {
     int numberNotSatisfiedClauses = 0;
     map<int,int> lits;
     vector<int> indexesOfClausesNotSatisfied;
+    sem_wait(&semaphoreIteration);
+    int iteration = actualIteration;
+    actualIteration++;
+    sem_post(&semaphoreIteration);
     for (int i = 0; i < numberClauses; i++) {
         bool satisfied = false;
         vector<int> litsTemp;
         for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
-            if (valuations[actualIteration][it->first] == clauses[i][it->first]) {
+            if (valuations[iteration][it->first] == clauses[i][it->first]) {
                 satisfied = true;
                 break;
             } else {
@@ -73,21 +105,32 @@ void verifyClauses() {
             }
         }
     }
-    if (numberNotSatisfiedClauses == 0) {
-        cout << "SAT" << endl;
-    } else {
-        cout << "[" << numberNotSatisfiedClauses <<" clausulas falsas]";
-        for (int index : indexesOfClausesNotSatisfied) {
-            cout << " " << index;
-        }
-        cout << endl;
-        sortAndPrintLits(lits);
-    }
-    actualIteration++;
+    // sem_wait(&semaphorePrint);
+    vector<pair<int, int> > sortedLits = sortLits(lits);
+
+    arrNumberNotSatisfiedClauses[iteration] = numberNotSatisfiedClauses;
+    arrIndexesOfClausesNotSatisfied[iteration] = indexesOfClausesNotSatisfied;
+    arrSortedLits[iteration] = sortedLits;
+    // printOutput(numberNotSatisfiedClauses, indexesOfClausesNotSatisfied, sortedLits);
+
+    // sem_post(&semaphorePrint);
 }
 
-void verifyCases() {
-    for (int i = 0; i < numberValuations; i++) {
+// void verifyCases() {
+//     for (int i = 0; i < numberValuations; i++) {
+//         verifyClauses();
+//     }
+// }
+
+void *threadFunction(void* param) {
+    int nActualIteration = 0;
+    while (1) {
+        sem_wait(&semaphoreIteration);
+        nActualIteration = actualIteration;
+        sem_post(&semaphoreIteration);
+        if (nActualIteration == numberValuations) {
+            pthread_exit(NULL);
+        }
         verifyClauses();
     }
 }
@@ -108,7 +151,7 @@ int main() {
     // output:
     // quantas clausulas nao foram satisfeitas
     // uma clausula eh satisfeita quando pelo menos um literal tiver valoracao verdadeira
-
+    
     
     // v[0] = 1 2 -3
     
@@ -163,7 +206,22 @@ int main() {
     }
     // cout << "valuations: " << numberValuations << endl;
 
-    verifyCases();
+    // verifyCases();
+
+    sem_init(&semaphoreIteration, 0, 1);
+    sem_init(&semaphorePrint, 0, 1);
+    
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_create(&tid[i], NULL, &threadFunction, NULL);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_join(tid[i], NULL);
+    }
+
+    for (int i = 0; i < numberValuations; i++) {
+        printOutput(arrNumberNotSatisfiedClauses[i], arrIndexesOfClausesNotSatisfied[i], arrSortedLits[i]);
+    }
 
     return 0;
 }
