@@ -15,7 +15,7 @@ using namespace std;
 
 int numberClauses = 0, numberVariables = 0, numberValuations = 0;
 vector<map<int,int>> valuations;
-vector<map<int,int>> clauses;
+vector<vector<int>> clauses;
 int actualIteration = 0;
 sem_t semaphoreIteration, semaphorePrint;
 pthread_t tid[NUM_THREADS];
@@ -86,12 +86,12 @@ void verifyClauses() {
     for (int i = 0; i < numberClauses; i++) {
         bool satisfied = false;
         vector<int> litsTemp;
-        for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
-            if (valuations[iteration][it->first] == clauses[i][it->first]) {
+        for (int it : clauses[i]) {
+            if (valuations[iteration][abs(it)] == it) {
                 satisfied = true;
                 break;
             } else {
-                litsTemp.push_back(clauses[i][it->first]);
+                litsTemp.push_back(it);
             }
         }
         if (!satisfied) {
@@ -102,22 +102,12 @@ void verifyClauses() {
             }
         }
     }
-    // sem_wait(&semaphorePrint);
     vector<pair<int, int> > sortedLits = sortLits(lits);
 
     arrNumberNotSatisfiedClauses[iteration] = numberNotSatisfiedClauses;
     arrIndexesOfClausesNotSatisfied[iteration] = indexesOfClausesNotSatisfied;
     arrSortedLits[iteration] = sortedLits;
-    // printOutput(numberNotSatisfiedClauses, indexesOfClausesNotSatisfied, sortedLits);
-
-    // sem_post(&semaphorePrint);
 }
-
-// void verifyCases() {
-//     for (int i = 0; i < numberValuations; i++) {
-//         verifyClauses();
-//     }
-// }
 
 void *threadFunction(void* param) {
     int nActualIteration = 0;
@@ -160,22 +150,22 @@ int main() {
     // cout << "Clauses:" << endl;
 
     for (int i = 0; i < numberClauses; i++) {
-        map<int, int> auxMap;
+        vector<int> auxVec;
         while (true) {
             int temp;
             cin >> temp;
             if (temp == 0) {
                 break;
             }
-            auxMap[abs(temp)] = temp;
+            auxVec.push_back(temp);
         }
-        clauses.push_back(auxMap);
+        clauses.push_back(auxVec);
     }
 
     // cout << "clauses:" << endl;
     // for (int i = 0; i < numberClauses; i++) {
-    //     for (auto it = clauses[i].begin(); it != clauses[i].end(); it++) {
-    //         cout << it->first << ':' << it->second << " ";
+    //     for (auto it : clauses[i]) {
+    //         cout << it << " ";
     //     }
     //     cout << endl;
     // }
