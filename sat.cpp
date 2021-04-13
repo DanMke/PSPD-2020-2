@@ -9,7 +9,7 @@
 #include <string.h>
 
 #define NUM_THREADS 12
-#define BLOCK 120000
+#define BLOCK 1200
 
 using namespace std;
 
@@ -46,7 +46,7 @@ void printOutput(int numberNotSatisfiedClauses, vector<int> indexesOfClausesNotS
     if (numberNotSatisfiedClauses == 0) {
         printf("SAT\n");
     } else {
-        printf("[%d clausulas falsas]\n", numberNotSatisfiedClauses);
+        printf("[%d clausulas falsas]", numberNotSatisfiedClauses);
         for (int index : indexesOfClausesNotSatisfied) {
             printf(" %d", index);
         }
@@ -109,7 +109,13 @@ int main() {
     int temp;
     int scanfReturn;
     scanfReturn = scanf("%d", &numberVariables);
+    if (scanfReturn != 1) {
+        return 0;
+    }
     scanfReturn = scanf("%d", &numberClauses);
+    if (scanfReturn != 1) {
+        return 0;
+    }
 
     for (int i = 0; i < numberClauses; i++) {
         vector<int> auxVec;
