@@ -9,7 +9,7 @@
 #include <string.h>
 
 #define NUM_THREADS 12
-#define BLOCK 1200
+#define BLOCK 12000
 
 using namespace std;
 
