@@ -1,9 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <cstdlib>
 #include <algorithm>
-#include <unistd.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
@@ -13,8 +11,9 @@
 
 using namespace std;
 
-pthread_mutex_t mtxLock;
 pthread_t tid[NUM_THREADS];
+
+int arr[NUM_THREADS];
 
 int actualIteration = 0;
 
@@ -91,17 +90,15 @@ void verifyValuationToClauses(int iteration) {
     arrSortedLits[iteration] = sortedLits;
 }
 
-void *threadFunction(void* param) {
-    int tempActualIteration;
+void *threadFunction(void* arg) {
+    int turn = *(int*)arg;
+
     while (1) {
-        pthread_mutex_lock(&mtxLock);
-        tempActualIteration = actualIteration;
-        actualIteration++;
-        pthread_mutex_unlock(&mtxLock);
-        if (tempActualIteration >= numberValuations) {
+        if (turn >= numberValuations) {
             pthread_exit(NULL);
         }
-        verifyValuationToClauses(tempActualIteration);
+        verifyValuationToClauses(turn);
+        turn += NUM_THREADS;
     }
 }
 
@@ -131,9 +128,6 @@ int main() {
 
     char reader[5];
     map<int, int> valuationsMap;
-
-    pthread_mutex_init(&mtxLock, NULL);
-
     while (1) {
         int ret = scanf("%s", reader);
         if (ret != EOF) {
@@ -153,7 +147,8 @@ int main() {
 
         if (ret == EOF || numberValuations == BLOCK) {
             for (int i = 0; i < NUM_THREADS; i++) {
-                pthread_create(&tid[i], NULL, &threadFunction, NULL);
+                arr[i] = i;
+                pthread_create(&tid[i], NULL, &threadFunction, (void*)&arr[i]);
             }
         
             for (int i = 0; i < NUM_THREADS; i++) {
