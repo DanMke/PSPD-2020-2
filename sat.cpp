@@ -15,8 +15,6 @@ pthread_t tid[NUM_THREADS];
 
 int arr[NUM_THREADS];
 
-int actualIteration = 0;
-
 int numberClauses = 0, numberVariables = 0, numberValuations = 0;
 vector<map<int,int>> valuations;
 vector<vector<int>> clauses;
@@ -164,7 +162,6 @@ int main() {
             }
             valuations.clear();
             numberValuations = 0;
-            actualIteration = 0;
         }
     }
 
