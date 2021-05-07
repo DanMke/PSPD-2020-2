@@ -5,6 +5,8 @@
 | Daniel Maike Mendes Gonçalves | 16/0117003 | 
 | Joberth Rogers Tavares Costa | 16/0128013 |
 
+#### [Link para o repositório](https://github.com/DanMke/PSPD-2020-2)
+
 ### 1 - Explicação do Algoritmo
 
 Para entender mais sobre o princípios de satisfatibilidade booleana: https://pt.wikipedia.org/wiki/Problema_de_satisfatibilidade_booliana
