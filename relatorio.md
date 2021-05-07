@@ -20,6 +20,11 @@ Essa segunda versão apresentou vários gargalos por salvar muito dado em memór
 
 - Terceira versão do algoritmo, seguimos a abordagem de tratar por blocos, separamos em blocos de tamanho 12000 fulls/flips e após isso criamos o tanto de threads determinadas e elas vão resolvendo um conjunto dentro desses blocos, por exemplo se forem 12 threads a primeira thread vai resolver o caso 0 e o caso 12, a segunda thread resolveria o caso 1 e o caso 13, sempre somando a quantidade de threads para não colidir.
 Após a resolução de um bloco, é esperado todas as threads com join, é realizado o print da solução do bloco sequencialmente e depois segue para o próximo bloco criando novas threads até que acabe.
+
+#### Ambiente Executado
+
+Para executar os testes foi usado as máquinas da chococinno particulamente para rodar toda a bateria de testes do problema.
+
 ### 2) Dados Coletados
 
 OBS: Para realizar os testes envolvendo a saída jogada para /dev/null e executando o mesmo código com os prints comentados, foi testado usando apenas o time limit de 60 segundos.
@@ -251,3 +256,7 @@ Nessa medições é possível verificar que apenas time limits gerados acima de 
 Para esse teste, os testes envolvendo 8 thread foram os piores no ultimo intervalo de teste dos casos. Os outros se mantiveram perto da linha de base, e apena na ultima iteração com 120 segundos de timeline gerado e 12 threads que obteve um resultado positivo em relação a baseline.
 
 <iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS8LXUSmB2GE1pE_fxmjhvw6-dMM0t0bCBnLWF0FXLnSwTgGbccIw91sfKJNfC9UdqqCnlj2UoQ6WDc/pubchart?oid=384088074&amp;format=interactive"></iframe>
+
+### Conclusão
+
+É possível verificar através das análises dos gráficos que para entradas menores o algorítimo mais recente desenvolvido pela dupla tem menor desempenho, pois este usa números muito grandes para cada bloco na hora de processar os fulls e flips, o que pode ser um empecilho na hora de computar entradas pequenas. Já para entradas maiores como é o caso dos bcm-ibm, é possível verificar que temos uma linha de tendência para essas entradas que tendem a ser uma parabola, geralmente nos primeiros timelimits os valores ficam bem próximos da baseline, mas a partir do timelimit 120 segundos, fica bastante evidente que com 6,8 e 12 thread os algoritmos sobressaem bem melhor que o da baseline. Logo resolvemos escolher esse tipo de abordagem de análise para servir como prova de que para entradas maiores o estrátegia tende a ser melhor e foi possível comprovar isso através dos testes. É importante destacar também que o conceito de bloco para nosso algoritmo é fixo contendo 12000 flips para ser processado a cada iteração dentro da thread.
